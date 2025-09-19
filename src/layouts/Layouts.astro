@@ -1,3 +1,41 @@
 ---
 import "../styles/global.css";
+
+export interface Props {
+    title?: string;
+    description?: string;
+    image?: string;
+    type?: string;
+}
+
+const {
+    title = "firefly - AI-Powered Note Organization",
+    description = "Transform how you organize notes with AI. No folders needed - just instant, intelligent search and auto-tagging.",
+    image = "https://firefly.com/og-image.jpg",
+    type = "website",
+} = Astro.props;
 ---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta property="og:type" content={type} />
+        <meta property="og:url" content={Astro.url} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+        <slot name="head" />
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>

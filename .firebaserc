@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "deploy": "pseo-9fe43",
+    "default": "pseo-9fe43"
+  },
+  "targets": {},
+  "etags": {}
+}
