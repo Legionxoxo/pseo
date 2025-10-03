@@ -1,0 +1,444 @@
+---
+
+---
+
+<section id="hero" class="min-h-screen flex items-center relative">
+    <!-- Animated Grid Background -->
+    <div
+        class="absolute inset-0 opacity-10 overflow-hidden"
+        style="height: calc(100% + 120px);"
+    >
+        <div
+            id="grid-container-bg"
+            class="w-full h-full p-4"
+            style="min-height: 400px; display: grid;"
+        >
+        </div>
+    </div>
+
+    <!-- Logo Grid (full opacity) -->
+    <div
+        class="absolute inset-0 overflow-hidden"
+        style="height: calc(100% + 120px);"
+    >
+        <div
+            id="grid-container"
+            class="w-full h-full p-4"
+            style="min-height: 400px; display: grid;"
+        >
+        </div>
+    </div>
+
+    <div
+        class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 w-full"
+    >
+        <!-- Main Heading -->
+        <h1
+            class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-black leading-tight px-4"
+        >
+            Best alternatives to mymind
+        </h1>
+    </div>
+</section>
+
+<style>
+    #grid-container {
+        width: 100%;
+        height: 100%;
+        gap: 0 !important;
+        grid-gap: 0 !important;
+        grid-row-gap: 0 !important;
+        grid-column-gap: 0 !important;
+    }
+
+    .grid-cell {
+        aspect-ratio: 1;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(0, 0, 0, 0.5);
+        height: 100%;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .grid-cell.active {
+        background-color: red !important;
+        box-shadow: 0 0 12px red !important;
+        border: 3px solid darkred !important;
+    }
+
+    .grid-cell.dark {
+        background-color: darkred !important;
+        box-shadow: 0 0 6px darkred !important;
+        border: 3px solid red !important;
+    }
+</style>
+
+<script is:inline>
+    // Logo images to place in the grid
+    const logos = [
+        "/mymind-article-logo/mem-ai.png",
+        "/mymind-article-logo/raindrop.png",
+        "/mymind-article-logo/evernote.png",
+        "/mymind-article-logo/fabric.png",
+        "/mymind-article-logo/milanote.png",
+        "/mymind-article-logo/supernotes.png",
+        "/mymind-article-logo/notion.png",
+        "/mymind-article-logo/obsidian.png",
+        "/mymind-article-logo/google-keep.png",
+    ];
+
+    function initializeGrid() {
+        const containerBg = document.getElementById("grid-container-bg");
+        const container = document.getElementById("grid-container");
+        if (!container || !containerBg) return;
+
+        const isMobile = window.innerWidth < 769;
+        const isTablet = window.innerWidth >= 769 && window.innerWidth < 1025;
+
+        let cols, rows;
+        if (isMobile) {
+            cols = 12;
+            rows = 15;
+        } else if (isTablet) {
+            cols = 18;
+            rows = 12;
+        } else {
+            cols = 22;
+            rows = 10;
+        }
+
+        // Clear existing content
+        container.innerHTML = "";
+        containerBg.innerHTML = "";
+
+        // Set grid properties for both containers
+        [container, containerBg].forEach((c) => {
+            c.style.display = "grid";
+            c.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            c.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+            c.style.gap = "0 !important";
+            c.style.gridGap = "0 !important";
+            c.style.gridRowGap = "0 !important";
+            c.style.gridColumnGap = "0 !important";
+            c.style.margin = "0";
+            c.style.padding = "0";
+            c.style.width = "100%";
+            c.style.height = "100%";
+        });
+
+        const totalCells = cols * rows;
+
+        // Create background grid cells
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement("div");
+            cell.className = "grid-cell";
+            cell.dataset.index = i.toString();
+            // Match grids.png exactly - very light gray background, white cells, subtle borders
+            cell.style.backgroundColor = "rgba(250, 250, 250, 0.4)";
+            cell.style.borderTop = "1px solid rgba(160, 160, 160, 0.7)";
+            cell.style.borderLeft = "1px solid rgba(160, 160, 160, 0.7)";
+            cell.style.borderRight = "0";
+            cell.style.borderBottom = "0";
+
+            // Add right border to last column
+            if ((i + 1) % cols === 0) {
+                cell.style.borderRight = "1px solid rgba(160, 160, 160, 0.7)";
+            }
+
+            // Add bottom border to last row
+            if (i >= (rows - 1) * cols) {
+                cell.style.borderBottom = "1px solid rgba(160, 160, 160, 0.7)";
+            }
+
+            cell.style.borderRadius = "0";
+            cell.style.height = "100%";
+            cell.style.width = "100%";
+            cell.style.aspectRatio = "1";
+            cell.style.margin = "0 !important";
+            cell.style.padding = "0 !important";
+            cell.style.display = "block";
+            cell.style.verticalAlign = "top";
+            cell.style.transition = "all 0.3s ease";
+            containerBg.appendChild(cell);
+        }
+
+        // Create logo grid cells (transparent, will only hold logos)
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement("div");
+            cell.className = "grid-cell-logo";
+            cell.dataset.index = i.toString();
+            cell.style.backgroundColor = "transparent";
+            cell.style.border = "none";
+            cell.style.height = "100%";
+            cell.style.width = "100%";
+            cell.style.aspectRatio = "1";
+            cell.style.margin = "0 !important";
+            cell.style.padding = "0 !important";
+            cell.style.display = "block";
+            cell.style.verticalAlign = "top";
+            container.appendChild(cell);
+        }
+
+        startAnimation();
+    }
+
+    function startAnimation() {
+        const cells = document.querySelectorAll(".grid-cell");
+        const logoCells = document.querySelectorAll(".grid-cell-logo");
+        if (!cells.length || !logoCells.length) return;
+
+        // Get current grid dimensions for adjacency checking
+        const isMobile = window.innerWidth < 769;
+        const isTablet = window.innerWidth >= 769 && window.innerWidth < 1025;
+
+        let cols, rows;
+        if (isMobile) {
+            cols = 12;
+            rows = 15;
+        } else if (isTablet) {
+            cols = 18;
+            rows = 12;
+        } else {
+            cols = 22;
+            rows = 10;
+        }
+
+        function animateRandomCells() {
+            // Clear all previous states - reset to match grids.png
+            cells.forEach((cell) => {
+                cell.style.backgroundColor = "rgba(250, 250, 250, 0.4)";
+                cell.style.border = "1px solid rgba(160, 160, 160, 0.7)";
+                cell.style.boxShadow = "none";
+                cell.style.padding = "0";
+                cell.style.opacity = "1";
+                cell.innerHTML = "";
+            });
+
+            const numActiveCells = Math.floor(Math.random() * 6) + 15; // 15-20 cells
+            const numMediumCells = Math.floor(Math.random() * 4) + 12; // 12-15 cells
+
+            const usedIndices = new Set();
+
+            // Function to check if a cell is adjacent to any used cell
+            function isAdjacent(index, usedSet) {
+                const row = Math.floor(index / cols);
+                const col = index % cols;
+
+                // Check all 8 surrounding cells (including diagonals)
+                const adjacentOffsets = [
+                    [-1, -1],
+                    [-1, 0],
+                    [-1, 1], // top row
+                    [0, -1],
+                    [0, 1], // middle row (skip center)
+                    [1, -1],
+                    [1, 0],
+                    [1, 1], // bottom row
+                ];
+
+                for (const [rowOffset, colOffset] of adjacentOffsets) {
+                    const newRow = row + rowOffset;
+                    const newCol = col + colOffset;
+
+                    // Check bounds
+                    if (
+                        newRow >= 0 &&
+                        newRow < rows &&
+                        newCol >= 0 &&
+                        newCol < cols
+                    ) {
+                        const adjacentIndex = newRow * cols + newCol;
+                        if (usedSet.has(adjacentIndex)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            // Add active cells with adjacency check
+            let attempts = 0;
+            for (let i = 0; i < numActiveCells && attempts < 100; i++) {
+                let randomIndex;
+                let found = false;
+                let cellAttempts = 0;
+
+                do {
+                    randomIndex = Math.floor(Math.random() * cells.length);
+                    cellAttempts++;
+                } while (
+                    (usedIndices.has(randomIndex) ||
+                        isAdjacent(randomIndex, usedIndices)) &&
+                    cellAttempts < 50
+                );
+
+                if (cellAttempts < 50) {
+                    usedIndices.add(randomIndex);
+                    const cell = cells[randomIndex];
+                    cell.style.backgroundColor = "rgba(200, 200, 200, 0.6)";
+                    cell.style.border = "1px solid rgba(180, 180, 180, 0.7)";
+                    cell.style.boxShadow = "none";
+                    found = true;
+                } else {
+                    i--; // Retry this iteration
+                }
+                attempts++;
+            }
+
+            // Add medium cells with adjacency check
+            attempts = 0;
+            for (let i = 0; i < numMediumCells && attempts < 100; i++) {
+                let randomIndex;
+                let found = false;
+                let cellAttempts = 0;
+
+                do {
+                    randomIndex = Math.floor(Math.random() * cells.length);
+                    cellAttempts++;
+                } while (
+                    (usedIndices.has(randomIndex) ||
+                        isAdjacent(randomIndex, usedIndices)) &&
+                    cellAttempts < 50
+                );
+
+                if (cellAttempts < 50) {
+                    usedIndices.add(randomIndex);
+                    const cell = cells[randomIndex];
+                    cell.style.backgroundColor = "rgba(220, 220, 220, 0.8)";
+                    cell.style.border = "1px solid rgba(200, 200, 200, 0.8)";
+                    cell.style.boxShadow = "none";
+                    found = true;
+                } else {
+                    i--; // Retry this iteration
+                }
+                attempts++;
+            }
+
+            // Place logos in rows above and below the center text (Desktop: 22 cols x 10 rows)
+            const centerRow = Math.floor(rows / 2); // row 5
+            const centerCol = Math.floor(cols / 2); // col 11
+
+            // Define logo positions in rows around the text
+            // logos array: mem-ai, raindrop, evernote, fabric, milanote, supernotes, notion, obsidian, google-keep
+            const positions = [
+                // Top row - 3 logos (mem-ai, raindrop, evernote)
+                { row: 1, col: 3 },
+                { row: 1, col: 10 },
+                { row: 1, col: 17 },
+                // Middle row left and right - 2 logos (fabric -> right, milanote -> left)
+                { row: 4, col: 14 }, // fabric on right
+                { row: 4, col: 10 }, // milanote on left
+                // Bottom row - 4 logos (supernotes, notion, obsidian, google-keep)
+                { row: 7, col: 2 },
+                { row: 7, col: 8 },
+                { row: 7, col: 13 },
+                { row: 7, col: 18 },
+            ];
+
+            for (let i = 0; i < logos.length && i < positions.length; i++) {
+                const targetRow = positions[i].row;
+                const targetCol = positions[i].col;
+
+                // Ensure within bounds
+                if (
+                    targetRow >= 0 &&
+                    targetRow < rows - 2 &&
+                    targetCol >= 0 &&
+                    targetCol < cols - 2
+                ) {
+                    const logoIndex = targetRow * cols + targetCol;
+
+                    // Mark the area as used
+                    for (let r = 0; r < 2; r++) {
+                        for (let c = 0; c < 2; c++) {
+                            const newRow = targetRow + r;
+                            const newCol = targetCol + c;
+                            if (newRow < rows && newCol < cols) {
+                                const adjacentIndex = newRow * cols + newCol;
+                                usedIndices.add(adjacentIndex);
+                            }
+                        }
+                    }
+
+                    const cell = logoCells[logoIndex];
+                    if (cell) {
+                        cell.style.backgroundColor = "transparent";
+                        cell.style.border = "none";
+                        cell.style.boxShadow = "none";
+                        cell.style.padding = "12px";
+                        cell.style.display = "flex";
+                        cell.style.alignItems = "center";
+                        cell.style.justifyContent = "center";
+                        cell.style.opacity = "1";
+                        cell.style.position = "relative";
+                        cell.style.zIndex = "100";
+                        cell.style.gridColumn = "span 2";
+                        cell.style.gridRow = "span 2";
+
+                        // Add logo image
+                        const img = document.createElement("img");
+                        img.src = logos[i];
+                        img.style.maxWidth = "100%";
+                        img.style.maxHeight = "100%";
+                        img.style.objectFit = "contain";
+                        img.style.opacity = "1";
+                        img.style.filter = "brightness(1.2) contrast(1.1)";
+                        cell.innerHTML = "";
+                        cell.appendChild(img);
+                    }
+                }
+            }
+        }
+
+        // Initial animation - run once only
+        animateRandomCells();
+    }
+
+    // Initialize when DOM is ready
+    function init() {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initializeGrid);
+        } else {
+            // DOM is already ready
+            setTimeout(initializeGrid, 100);
+        }
+    }
+
+    // Handle window resize
+    window.addEventListener("resize", () => {
+        setTimeout(initializeGrid, 200);
+    });
+
+    // Start initialization
+    init();
+
+    // UTM parameter forwarding
+    document.addEventListener("DOMContentLoaded", function () {
+        const heroBtn = document.getElementById("hero-cta-btn");
+        if (heroBtn) {
+            heroBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const source = urlParams.get("utm_source");
+                const campaign = urlParams.get("utm_campaign");
+
+                let tallyUrl = "https://tally.so/r/mZxYEv";
+                const params = new URLSearchParams();
+
+                if (source) params.set("utm_source", source);
+                if (campaign) params.set("utm_campaign", campaign);
+
+                if (params.toString()) {
+                    tallyUrl += "?" + params.toString();
+                }
+
+                window.open(tallyUrl, "_blank");
+            });
+        }
+    });
+</script>
